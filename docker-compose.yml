@@ -1,0 +1,11 @@
+version: '3'
+services:
+  api:
+    build:
+      context: .
+    command: yarn start
+    volumes:
+      - '.:/src/app'
+    working_dir: '/src/app'
+    ports:
+      - '3000:3000'

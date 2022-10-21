@@ -8,14 +8,14 @@ app.use(express.json());
 
 const users = [];
 
-app.get('/', (req, res) => res.statusCode(200).json(users));
+app.get('/', (req, res) => res.status(200).json(users));
 
 app.post('/', (req, res) => {
   const { body } = req;
 
   users.push(body);
 
-  res.statusCode(201).json({ message: 'New user added' });
+  res.status(201).json({ message: 'New user added' });
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
