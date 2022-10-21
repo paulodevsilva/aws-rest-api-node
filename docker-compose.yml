@@ -3,7 +3,7 @@ services:
   api:
     build:
       context: .
-    command: yarn start
+    command: npm run start
     volumes:
       - '.:/src/app'
     working_dir: '/src/app'
