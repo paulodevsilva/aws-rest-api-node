@@ -1,24 +1,27 @@
 version: '3'
 
 services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The HTTP port
+      - '80:80'
+      # The Web UI (enabled by --api.insecure=true)
+      - '8080:8080'
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
   app:
     labels:
       - 'traefik.enable=true'
-      - 'traefik.frontend.rule=Host:nodejs.devpaulosilva.com'
+      - 'traefik.http.routers.app.rule=Host(`nodejs.devpaulosilva.com`)'
+      - 'traefik.http.services.app.loadbalancer.server.port=3000'
 
-  reverse-proxy:
-    image: traefik:v2.4
-    container_name: 'traefik'
-    command:
-      - '--api.insecure=true'
-      - '--api.dashboard=true'
-      - '--api.debug=true'
-      - '--providers.docker=true'
-      - '--log.LEVEL=DEBUG'
-      - '--entryPoints.web.address=:80'
-      - '--providers.docker.exposedbydefault=false'
-    ports:
-      - '80:80'
-      - '8080:8080'
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+  # whoami:
+  #   # A container that exposes an API to show its IP address
+  #   image: traefik/whoami
+  #   labels:
+  #     - 'traefik.http.routers.whoami.rule=Host(`whoami.docker.localhost`)'
